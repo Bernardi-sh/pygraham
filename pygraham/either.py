@@ -1,11 +1,12 @@
 """
 Either monad implementation for error handling without exceptions
 """
+
 from typing import TypeVar, Generic, Callable, Union
 
-L = TypeVar('L')
-R = TypeVar('R')
-U = TypeVar('U')
+L = TypeVar("L")
+R = TypeVar("R")
+U = TypeVar("U")
 
 
 class Either(Generic[L, R]):
@@ -21,12 +22,12 @@ class Either(Generic[L, R]):
         self._is_left = is_left
 
     @staticmethod
-    def left(value: L) -> 'Either[L, R]':
+    def left(value: L) -> "Either[L, R]":
         """Create a Left value (error case)."""
         return Either(value, True)
 
     @staticmethod
-    def right(value: R) -> 'Either[L, R]':
+    def right(value: R) -> "Either[L, R]":
         """Create a Right value (success case)."""
         return Either(value, False)
 
@@ -56,19 +57,19 @@ class Either(Generic[L, R]):
             return default
         return self._value  # type: ignore
 
-    def map(self, fn: Callable[[R], U]) -> 'Either[L, U]':
+    def map(self, fn: Callable[[R], U]) -> "Either[L, U]":
         """Apply function to right value if Right, otherwise return Left."""
         if self._is_left:
             return Either.left(self._value)  # type: ignore
         return Either.right(fn(self._value))  # type: ignore
 
-    def map_left(self, fn: Callable[[L], U]) -> 'Either[U, R]':
+    def map_left(self, fn: Callable[[L], U]) -> "Either[U, R]":
         """Apply function to left value if Left, otherwise return Right."""
         if self._is_left:
             return Either.left(fn(self._value))  # type: ignore
         return Either.right(self._value)  # type: ignore
 
-    def flat_map(self, fn: Callable[[R], 'Either[L, U]']) -> 'Either[L, U]':
+    def flat_map(self, fn: Callable[[R], "Either[L, U]"]) -> "Either[L, U]":
         """
         Apply function that returns Either to right value if Right.
         Also known as bind or chain.
@@ -86,7 +87,7 @@ class Either(Generic[L, R]):
             return left_fn(self._value)  # type: ignore
         return right_fn(self._value)  # type: ignore
 
-    def swap(self) -> 'Either[R, L]':
+    def swap(self) -> "Either[R, L]":
         """Swap Left and Right."""
         if self._is_left:
             return Either.right(self._value)  # type: ignore

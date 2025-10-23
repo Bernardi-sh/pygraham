@@ -1,12 +1,13 @@
 """
 Immutable data structures with structural sharing
 """
+
 from typing import TypeVar, Generic, Iterator, Optional, Callable, Any, Tuple, List as PyList
 from collections.abc import Sequence, Mapping
 
-T = TypeVar('T')
-K = TypeVar('K')
-V = TypeVar('V')
+T = TypeVar("T")
+K = TypeVar("K")
+V = TypeVar("V")
 
 
 class ImmutableList(Generic[T], Sequence[T]):
@@ -21,30 +22,30 @@ class ImmutableList(Generic[T], Sequence[T]):
         self._items: PyList[T] = list(items) if items is not None else []
 
     @staticmethod
-    def of(*items: T) -> 'ImmutableList[T]':
+    def of(*items: T) -> "ImmutableList[T]":
         """Create an ImmutableList from items."""
         return ImmutableList(list(items))
 
-    def append(self, item: T) -> 'ImmutableList[T]':
+    def append(self, item: T) -> "ImmutableList[T]":
         """Return a new list with item appended."""
         new_items = self._items.copy()
         new_items.append(item)
         return ImmutableList(new_items)
 
-    def prepend(self, item: T) -> 'ImmutableList[T]':
+    def prepend(self, item: T) -> "ImmutableList[T]":
         """Return a new list with item prepended."""
         new_items = [item] + self._items
         return ImmutableList(new_items)
 
-    def concat(self, other: 'ImmutableList[T]') -> 'ImmutableList[T]':
+    def concat(self, other: "ImmutableList[T]") -> "ImmutableList[T]":
         """Return a new list with other concatenated."""
         return ImmutableList(self._items + other._items)
 
-    def map(self, fn: Callable[[T], Any]) -> 'ImmutableList[Any]':
+    def map(self, fn: Callable[[T], Any]) -> "ImmutableList[Any]":
         """Apply function to each element."""
         return ImmutableList([fn(item) for item in self._items])
 
-    def filter(self, predicate: Callable[[T], bool]) -> 'ImmutableList[T]':
+    def filter(self, predicate: Callable[[T], bool]) -> "ImmutableList[T]":
         """Return a new list with elements matching predicate."""
         return ImmutableList([item for item in self._items if predicate(item)])
 
@@ -55,19 +56,21 @@ class ImmutableList(Generic[T], Sequence[T]):
             result = fn(result, item)
         return result
 
-    def take(self, n: int) -> 'ImmutableList[T]':
+    def take(self, n: int) -> "ImmutableList[T]":
         """Return a new list with first n elements."""
         return ImmutableList(self._items[:n])
 
-    def drop(self, n: int) -> 'ImmutableList[T]':
+    def drop(self, n: int) -> "ImmutableList[T]":
         """Return a new list without first n elements."""
         return ImmutableList(self._items[n:])
 
-    def reverse(self) -> 'ImmutableList[T]':
+    def reverse(self) -> "ImmutableList[T]":
         """Return a new list with elements reversed."""
         return ImmutableList(list(reversed(self._items)))
 
-    def sort(self, key: Optional[Callable[[T], Any]] = None, reverse: bool = False) -> 'ImmutableList[T]':
+    def sort(
+        self, key: Optional[Callable[[T], Any]] = None, reverse: bool = False
+    ) -> "ImmutableList[T]":
         """Return a new sorted list."""
         sorted_items = sorted(self._items, key=key, reverse=reverse)
         return ImmutableList(sorted_items)
@@ -76,7 +79,7 @@ class ImmutableList(Generic[T], Sequence[T]):
         """Return first element or None if empty."""
         return self._items[0] if self._items else None
 
-    def tail(self) -> 'ImmutableList[T]':
+    def tail(self) -> "ImmutableList[T]":
         """Return list without first element."""
         return self.drop(1)
 
@@ -101,7 +104,7 @@ class ImmutableList(Generic[T], Sequence[T]):
             return False
         return self._items == other._items
 
-    def __add__(self, other: 'ImmutableList[T]') -> 'ImmutableList[T]':
+    def __add__(self, other: "ImmutableList[T]") -> "ImmutableList[T]":
         """Allow using + operator for concatenation."""
         return self.concat(other)
 
@@ -117,34 +120,34 @@ class ImmutableDict(Generic[K, V], Mapping[K, V]):
         self._items: dict[K, V] = dict(items) if items is not None else {}
 
     @staticmethod
-    def of(**kwargs: V) -> 'ImmutableDict[str, V]':
+    def of(**kwargs: V) -> "ImmutableDict[str, V]":
         """Create an ImmutableDict from keyword arguments."""
         return ImmutableDict(kwargs)
 
-    def set(self, key: K, value: V) -> 'ImmutableDict[K, V]':
+    def set(self, key: K, value: V) -> "ImmutableDict[K, V]":
         """Return a new dict with key set to value."""
         new_items = self._items.copy()
         new_items[key] = value
         return ImmutableDict(new_items)
 
-    def delete(self, key: K) -> 'ImmutableDict[K, V]':
+    def delete(self, key: K) -> "ImmutableDict[K, V]":
         """Return a new dict without key."""
         new_items = self._items.copy()
         if key in new_items:
             del new_items[key]
         return ImmutableDict(new_items)
 
-    def update(self, other: 'ImmutableDict[K, V]') -> 'ImmutableDict[K, V]':
+    def update(self, other: "ImmutableDict[K, V]") -> "ImmutableDict[K, V]":
         """Return a new dict with other's items merged."""
         new_items = self._items.copy()
         new_items.update(other._items)
         return ImmutableDict(new_items)
 
-    def map_values(self, fn: Callable[[V], Any]) -> 'ImmutableDict[K, Any]':
+    def map_values(self, fn: Callable[[V], Any]) -> "ImmutableDict[K, Any]":
         """Apply function to each value."""
         return ImmutableDict({k: fn(v) for k, v in self._items.items()})
 
-    def filter(self, predicate: Callable[[Tuple[K, V]], bool]) -> 'ImmutableDict[K, V]':
+    def filter(self, predicate: Callable[[Tuple[K, V]], bool]) -> "ImmutableDict[K, V]":
         """Return a new dict with items matching predicate."""
         return ImmutableDict({k: v for k, v in self._items.items() if predicate((k, v))})
 

@@ -1,9 +1,10 @@
 """
 Pattern matching utilities
 """
+
 from typing import Any, Callable, TypeVar, Optional
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class _WildCard:
@@ -124,12 +125,12 @@ class Match:
         self.cases: list[Case] = []
         self.default_handler: Optional[Callable[[Any], Any]] = None
 
-    def case(self, pattern: Any, handler: Callable[[Any], Any]) -> 'Match':
+    def case(self, pattern: Any, handler: Callable[[Any], Any]) -> "Match":
         """Add a case to the match."""
         self.cases.append(Case(pattern, handler))
         return self
 
-    def default(self, handler: Callable[[Any], Any]) -> 'Match':
+    def default(self, handler: Callable[[Any], Any]) -> "Match":
         """Set default handler if no case matches."""
         self.default_handler = handler
         return self
@@ -147,20 +148,26 @@ class Match:
 # Type-based pattern matching helpers
 def instance_of(*types: type) -> Callable[[Any], bool]:
     """Create a predicate that checks if value is instance of any given types."""
+
     def predicate(value: Any) -> bool:
         return isinstance(value, types)
+
     return predicate
 
 
 def has_attr(attr: str) -> Callable[[Any], bool]:
     """Create a predicate that checks if value has given attribute."""
+
     def predicate(value: Any) -> bool:
         return hasattr(value, attr)
+
     return predicate
 
 
 def in_range(min_val: Any, max_val: Any) -> Callable[[Any], bool]:
     """Create a predicate that checks if value is in range."""
+
     def predicate(value: Any) -> bool:
         return min_val <= value <= max_val
+
     return predicate

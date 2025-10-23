@@ -1,6 +1,7 @@
 """
 Tests for lazy evaluation
 """
+
 import pytest
 from pygraham import lazy, LazySequence
 
@@ -90,11 +91,13 @@ class TestLazySequence:
         assert result == 10
 
     def test_chaining(self):
-        result = (LazySequence.range(1, 11)
-                  .filter(lambda x: x % 2 == 0)
-                  .map(lambda x: x * 2)
-                  .take(3)
-                  .to_list())
+        result = (
+            LazySequence.range(1, 11)
+            .filter(lambda x: x % 2 == 0)
+            .map(lambda x: x * 2)
+            .take(3)
+            .to_list()
+        )
         assert result == [4, 8, 12]
 
     def test_lazy_evaluation(self):

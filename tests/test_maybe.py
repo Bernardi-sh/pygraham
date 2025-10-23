@@ -1,6 +1,7 @@
 """
 Tests for Maybe monad
 """
+
 import pytest
 from pygraham import Maybe, Just, Nothing
 
@@ -86,11 +87,9 @@ class TestMaybe:
         assert result.get() == 10
 
     def test_chaining(self):
-        result = (Just(5)
-                  .map(lambda x: x * 2)
-                  .filter(lambda x: x > 5)
-                  .map(lambda x: x + 1)
-                  .get_or_else(0))
+        result = (
+            Just(5).map(lambda x: x * 2).filter(lambda x: x > 5).map(lambda x: x + 1).get_or_else(0)
+        )
         assert result == 11
 
     def test_equality(self):

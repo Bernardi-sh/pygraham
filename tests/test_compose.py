@@ -1,6 +1,7 @@
 """
 Tests for function composition
 """
+
 import pytest
 from pygraham import compose, pipe, curry
 
@@ -19,7 +20,7 @@ class TestCompose:
     def test_compose_three_functions(self):
         add_one = lambda x: x + 1
         double = lambda x: x * 2
-        square = lambda x: x ** 2
+        square = lambda x: x**2
         f = compose(square, double, add_one)
         assert f(3) == 64  # ((3 + 1) * 2) ** 2 = 8 ** 2
 
@@ -36,7 +37,7 @@ class TestCompose:
     def test_pipe_three_functions(self):
         add_one = lambda x: x + 1
         double = lambda x: x * 2
-        square = lambda x: x ** 2
+        square = lambda x: x**2
         f = pipe(add_one, double, square)
         assert f(3) == 64  # ((3 + 1) * 2) ** 2
 

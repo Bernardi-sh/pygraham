@@ -1,6 +1,7 @@
 """
 Tests for immutable data structures
 """
+
 import pytest
 from pygraham import ImmutableList, ImmutableDict
 
@@ -104,11 +105,13 @@ class TestImmutableList:
         assert lst1 != lst3
 
     def test_chaining(self):
-        result = (ImmutableList.of(1, 2, 3, 4, 5)
-                  .filter(lambda x: x % 2 == 0)
-                  .map(lambda x: x * 2)
-                  .append(100)
-                  .reverse())
+        result = (
+            ImmutableList.of(1, 2, 3, 4, 5)
+            .filter(lambda x: x % 2 == 0)
+            .map(lambda x: x * 2)
+            .append(100)
+            .reverse()
+        )
         assert list(result) == [100, 8, 4]
 
 
@@ -195,10 +198,12 @@ class TestImmutableDict:
         assert d1 != d3
 
     def test_chaining(self):
-        result = (ImmutableDict.of(a=1, b=2, c=3)
-                  .set("d", 4)
-                  .filter(lambda item: item[1] % 2 == 0)
-                  .map_values(lambda x: x * 10))
+        result = (
+            ImmutableDict.of(a=1, b=2, c=3)
+            .set("d", 4)
+            .filter(lambda item: item[1] % 2 == 0)
+            .map_values(lambda x: x * 10)
+        )
         assert result["b"] == 20
         assert result["d"] == 40
         assert "a" not in result

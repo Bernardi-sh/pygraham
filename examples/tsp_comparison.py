@@ -4,6 +4,7 @@ Travelling Salesman Problem: Before and After PyGraham
 This example demonstrates the stylistic and performance advantages
 of using PyGraham's functional programming features.
 """
+
 import time
 import random
 from typing import List, Tuple
@@ -13,6 +14,7 @@ import math
 # Try to import PyGraham, fallback if not available
 try:
     from pygraham import ImmutableList, pipe, curry, LazySequence
+
     HAS_PYGRAHAM = True
 except ImportError:
     HAS_PYGRAHAM = False
@@ -32,15 +34,15 @@ CITIES = [
 
 def distance(city1: Tuple[float, float], city2: Tuple[float, float]) -> float:
     """Calculate Euclidean distance between two cities."""
-    return math.sqrt((city1[0] - city2[0])**2 + (city1[1] - city2[1])**2)
+    return math.sqrt((city1[0] - city2[0]) ** 2 + (city1[1] - city2[1]) ** 2)
 
 
 # ============================================================================
 # BEFORE: Vanilla Python (Imperative Style)
 # ============================================================================
 
-def calculate_route_distance_vanilla(cities: List[Tuple[float, float]],
-                                     route: List[int]) -> float:
+
+def calculate_route_distance_vanilla(cities: List[Tuple[float, float]], route: List[int]) -> float:
     """Calculate total distance of a route (vanilla Python)."""
     total = 0.0
     for i in range(len(route) - 1):
@@ -56,7 +58,7 @@ def find_shortest_route_vanilla(cities: List[Tuple[float, float]]) -> Tuple[List
     indices = list(range(n))
 
     best_route = None
-    best_distance = float('inf')
+    best_distance = float("inf")
 
     # Generate all permutations
     for perm in permutations(indices):
@@ -69,8 +71,9 @@ def find_shortest_route_vanilla(cities: List[Tuple[float, float]]) -> Tuple[List
     return best_route, best_distance
 
 
-def tsp_with_filtering_vanilla(cities: List[Tuple[float, float]],
-                               max_distance: float) -> List[Tuple[List[int], float]]:
+def tsp_with_filtering_vanilla(
+    cities: List[Tuple[float, float]], max_distance: float
+) -> List[Tuple[List[int], float]]:
     """Find all routes under a certain distance (vanilla Python)."""
     n = len(cities)
     indices = list(range(n))
@@ -92,52 +95,58 @@ def tsp_with_filtering_vanilla(cities: List[Tuple[float, float]],
 # ============================================================================
 
 if HAS_PYGRAHAM:
+
     @curry
-    def calculate_route_distance_fp(cities: ImmutableList,
-                                    route: ImmutableList) -> float:
+    def calculate_route_distance_fp(cities: ImmutableList, route: ImmutableList) -> float:
         """Calculate total distance of a route (functional style)."""
         # Create pairs of consecutive cities
         pairs = list(zip(route, route.tail().append(route[0])))
 
         # Calculate distances and sum
-        return (ImmutableList(pairs)
-                .map(lambda pair: distance(cities[pair[0]], cities[pair[1]]))
-                .reduce(lambda acc, d: acc + d, 0.0))
-
+        return (
+            ImmutableList(pairs)
+            .map(lambda pair: distance(cities[pair[0]], cities[pair[1]]))
+            .reduce(lambda acc, d: acc + d, 0.0)
+        )
 
     def find_shortest_route_fp(cities: ImmutableList) -> Tuple[ImmutableList, float]:
         """Find shortest route using functional composition."""
         indices = ImmutableList(range(len(cities)))
 
         # Use lazy evaluation for efficiency
-        result = (LazySequence.from_iterable(permutations(range(len(cities))))
-                  .map(lambda perm: ImmutableList(perm))
-                  .map(lambda route: (route, calculate_route_distance_fp(cities, route)))
-                  .reduce(lambda best, current: current if current[1] < best[1] else best,
-                          (None, float('inf'))))
+        result = (
+            LazySequence.from_iterable(permutations(range(len(cities))))
+            .map(lambda perm: ImmutableList(perm))
+            .map(lambda route: (route, calculate_route_distance_fp(cities, route)))
+            .reduce(
+                lambda best, current: current if current[1] < best[1] else best,
+                (None, float("inf")),
+            )
+        )
 
         return result
 
-
-    def tsp_with_filtering_fp(cities: ImmutableList,
-                              max_distance: float) -> ImmutableList:
+    def tsp_with_filtering_fp(cities: ImmutableList, max_distance: float) -> ImmutableList:
         """Find all routes under a certain distance (functional style)."""
         calc_distance = calculate_route_distance_fp(cities)
 
-        return (LazySequence.from_iterable(permutations(range(len(cities))))
-                .map(lambda perm: ImmutableList(perm))
-                .map(lambda route: (route, calc_distance(route)))
-                .filter(lambda item: item[1] <= max_distance)
-                .to_list()
-                )
+        return (
+            LazySequence.from_iterable(permutations(range(len(cities))))
+            .map(lambda perm: ImmutableList(perm))
+            .map(lambda route: (route, calc_distance(route)))
+            .filter(lambda item: item[1] <= max_distance)
+            .to_list()
+        )
 
 
 # ============================================================================
 # GREEDY NEAREST NEIGHBOR HEURISTIC
 # ============================================================================
 
-def nearest_neighbor_vanilla(cities: List[Tuple[float, float]],
-                             start: int = 0) -> Tuple[List[int], float]:
+
+def nearest_neighbor_vanilla(
+    cities: List[Tuple[float, float]], start: int = 0
+) -> Tuple[List[int], float]:
     """Greedy nearest neighbor heuristic (vanilla)."""
     n = len(cities)
     unvisited = set(range(n))
@@ -159,6 +168,7 @@ def nearest_neighbor_vanilla(cities: List[Tuple[float, float]],
 
 
 if HAS_PYGRAHAM:
+
     def nearest_neighbor_fp(cities: ImmutableList, start: int = 0) -> Tuple[ImmutableList, float]:
         """Greedy nearest neighbor heuristic (functional)."""
         n = len(cities)
@@ -173,25 +183,26 @@ if HAS_PYGRAHAM:
 
             # Find nearest unvisited city
             nearest = unvisited.reduce(
-                lambda best, city: city if distance(cities[current], cities[city]) <
-                                          distance(cities[current], cities[best]) else best,
-                unvisited[0]
+                lambda best, city: (
+                    city
+                    if distance(cities[current], cities[city])
+                    < distance(cities[current], cities[best])
+                    else best
+                ),
+                unvisited[0],
             )
 
             new_dist = total_dist + distance(cities[current], cities[nearest])
 
-            return build_route((
-                route.append(nearest),
-                unvisited.filter(lambda c: c != nearest),
-                nearest,
-                new_dist
-            ))
+            return build_route(
+                (route.append(nearest), unvisited.filter(lambda c: c != nearest), nearest, new_dist)
+            )
 
         initial_state = (
             ImmutableList.of(start),
             ImmutableList([i for i in range(n) if i != start]),
             start,
-            0.0
+            0.0,
         )
 
         return build_route(initial_state)
@@ -200,6 +211,7 @@ if HAS_PYGRAHAM:
 # ============================================================================
 # BENCHMARKING
 # ============================================================================
+
 
 def benchmark_tsp(cities: List[Tuple[float, float]], num_runs: int = 5):
     """Benchmark both implementations."""
@@ -233,7 +245,7 @@ def benchmark_tsp(cities: List[Tuple[float, float]], num_runs: int = 5):
         print(f"\n  Speedup: {speedup:.2f}x {'faster' if speedup > 1 else 'slower'}")
 
     # Greedy heuristic comparison
-    print("\n" + "-"*70)
+    print("\n" + "-" * 70)
     print("GREEDY NEAREST NEIGHBOR HEURISTIC:")
 
     start_time = time.time()
@@ -266,7 +278,8 @@ def demonstrate_code_style():
     print(f"{'='*70}\n")
 
     print("VANILLA PYTHON (Imperative, Mutable):")
-    print("""
+    print(
+        """
     results = []
     for perm in permutations(indices):
         route = list(perm)
@@ -275,17 +288,20 @@ def demonstrate_code_style():
             results.append((route, dist))
     results.sort(key=lambda x: x[1])
     return results
-    """)
+    """
+    )
 
     if HAS_PYGRAHAM:
         print("\nPYGRAHAM (Functional, Immutable):")
-        print("""
+        print(
+            """
     return (LazySequence.from_iterable(permutations(range(len(cities))))
             .map(lambda perm: ImmutableList(perm))
             .map(lambda route: (route, calculate_distance(cities, route)))
             .filter(lambda item: item[1] <= max_distance)
             .to_list())
-        """)
+        """
+        )
 
         print("\nADVANTAGES:")
         print("  1. No mutable state - easier to reason about")

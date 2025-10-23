@@ -1,10 +1,11 @@
 """
 Function composition utilities
 """
+
 from typing import TypeVar, Callable, Any
 from functools import reduce, wraps
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def compose(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
@@ -27,6 +28,7 @@ def compose(*functions: Callable[[Any], Any]) -> Callable[[Any], Any]:
         @wraps(f)
         def composed(x: Any) -> Any:
             return f(g(x))
+
         return composed
 
     return reduce(_compose, functions)
@@ -65,6 +67,7 @@ def curry(fn: Callable[..., T]) -> Callable[..., Any]:
         6
     """
     import inspect
+
     sig = inspect.signature(fn)
     num_params = len(sig.parameters)
 
@@ -120,6 +123,7 @@ def partial(fn: Callable[..., T], *fixed_args: Any, **fixed_kwargs: Any) -> Call
         >>> hello("World")
         'Hello, World!'
     """
+
     @wraps(fn)
     def partially_applied(*args: Any, **kwargs: Any) -> T:
         combined_args = fixed_args + args

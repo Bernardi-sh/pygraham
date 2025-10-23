@@ -1,14 +1,16 @@
 """
 Fast operations using C++ extensions when available, fallback to Python
 """
+
 from typing import TypeVar, Callable, List, Any
 
-T = TypeVar('T')
-U = TypeVar('U')
+T = TypeVar("T")
+U = TypeVar("U")
 
 # Try to import C++ extensions
 try:
     from . import _fast
+
     HAS_FAST = True
 except ImportError:
     HAS_FAST = False
@@ -97,7 +99,7 @@ class FastPipeline:
         else:
             self._cpp_pipeline = None
 
-    def add(self, func: Callable[[Any], Any]) -> 'FastPipeline':
+    def add(self, func: Callable[[Any], Any]) -> "FastPipeline":
         """Add a function to the pipeline."""
         self.functions.append(func)
         if self._cpp_pipeline:

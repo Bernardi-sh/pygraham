@@ -1,10 +1,11 @@
 """
 Maybe monad implementation for handling optional values elegantly
 """
+
 from typing import TypeVar, Generic, Callable, Optional, Union
 
-T = TypeVar('T')
-U = TypeVar('U')
+T = TypeVar("T")
+U = TypeVar("U")
 
 
 class Maybe(Generic[T]):
@@ -20,19 +21,19 @@ class Maybe(Generic[T]):
         self._is_nothing = is_nothing
 
     @staticmethod
-    def of(value: Optional[T]) -> 'Maybe[T]':
+    def of(value: Optional[T]) -> "Maybe[T]":
         """Create a Maybe from a value. None becomes Nothing."""
         if value is None:
             return Maybe.nothing()
         return Maybe(value, False)
 
     @staticmethod
-    def just(value: T) -> 'Maybe[T]':
+    def just(value: T) -> "Maybe[T]":
         """Create a Just value (non-empty Maybe)."""
         return Maybe(value, False)
 
     @staticmethod
-    def nothing() -> 'Maybe[T]':
+    def nothing() -> "Maybe[T]":
         """Create a Nothing value (empty Maybe)."""
         return Maybe(None, True)
 
@@ -65,13 +66,13 @@ class Maybe(Generic[T]):
             return default_fn()
         return self._value  # type: ignore
 
-    def map(self, fn: Callable[[T], U]) -> 'Maybe[U]':
+    def map(self, fn: Callable[[T], U]) -> "Maybe[U]":
         """Apply function to value if Just, otherwise return Nothing."""
         if self._is_nothing:
             return Maybe.nothing()
         return Maybe.of(fn(self._value))  # type: ignore
 
-    def flat_map(self, fn: Callable[[T], 'Maybe[U]']) -> 'Maybe[U]':
+    def flat_map(self, fn: Callable[[T], "Maybe[U]"]) -> "Maybe[U]":
         """
         Apply function that returns Maybe to value if Just.
         Also known as bind or chain.
@@ -80,7 +81,7 @@ class Maybe(Generic[T]):
             return Maybe.nothing()
         return fn(self._value)  # type: ignore
 
-    def filter(self, predicate: Callable[[T], bool]) -> 'Maybe[T]':
+    def filter(self, predicate: Callable[[T], bool]) -> "Maybe[T]":
         """Return this if Just and predicate is true, otherwise Nothing."""
         if self._is_nothing:
             return self
@@ -88,7 +89,7 @@ class Maybe(Generic[T]):
             return self
         return Maybe.nothing()
 
-    def or_else(self, alternative: 'Maybe[T]') -> 'Maybe[T]':
+    def or_else(self, alternative: "Maybe[T]") -> "Maybe[T]":
         """Return this if Just, otherwise return alternative."""
         if self._is_nothing:
             return alternative

@@ -3,13 +3,26 @@ Data Processing Pipeline: Before and After PyGraham
 
 Demonstrates building complex data processing pipelines with PyGraham.
 """
+
 import time
 import random
 from typing import List, Dict, Optional
 
 try:
-    from pygraham import (Maybe, Either, Left, Right, pipe, compose,
-                         ImmutableList, LazySequence, match, case, _)
+    from pygraham import (
+        Maybe,
+        Either,
+        Left,
+        Right,
+        pipe,
+        compose,
+        ImmutableList,
+        LazySequence,
+        match,
+        case,
+        _,
+    )
+
     HAS_PYGRAHAM = True
 except ImportError:
     HAS_PYGRAHAM = False
@@ -30,6 +43,7 @@ TRANSACTIONS = [
 # ============================================================================
 # BEFORE: Vanilla Python (Imperative)
 # ============================================================================
+
 
 def process_transactions_vanilla(transactions: List[Dict]) -> Dict[str, float]:
     """
@@ -66,8 +80,7 @@ def process_transactions_vanilla(transactions: List[Dict]) -> Dict[str, float]:
     return result
 
 
-def complex_pipeline_vanilla(transactions: List[Dict],
-                             min_amount: float) -> List[Dict]:
+def complex_pipeline_vanilla(transactions: List[Dict], min_amount: float) -> List[Dict]:
     """
     Complex pipeline: filter, transform, validate, sort.
     """
@@ -96,7 +109,7 @@ def complex_pipeline_vanilla(transactions: List[Dict],
             "user": user,
             "original": amount,
             "after_tax": taxed_amount,
-            "savings": amount - taxed_amount
+            "savings": amount - taxed_amount,
         }
         results.append(result)
 
@@ -111,10 +124,10 @@ def complex_pipeline_vanilla(transactions: List[Dict],
 # ============================================================================
 
 if HAS_PYGRAHAM:
+
     def safe_get(d: Dict, key: str) -> Maybe:
         """Safely get a value from dict, wrapping in Maybe."""
         return Maybe.of(d.get(key))
-
 
     def validate_positive(x: float) -> Either:
         """Validate that a number is positive."""
@@ -122,38 +135,33 @@ if HAS_PYGRAHAM:
             return Left(f"Negative value: {x}")
         return Right(x)
 
-
     def process_transaction_fp(tx: Dict) -> Maybe:
         """
         Process a single transaction using Maybe monad for clean error handling.
         """
-        return (safe_get(tx, "status")
-                .filter(lambda s: s == "completed")
-                .flat_map(lambda _: safe_get(tx, "amount"))
-                .filter(lambda a: a > 0)
-                .flat_map(lambda amount: safe_get(tx, "user")
-                         .map(lambda user: (user, amount))))
-
+        return (
+            safe_get(tx, "status")
+            .filter(lambda s: s == "completed")
+            .flat_map(lambda _: safe_get(tx, "amount"))
+            .filter(lambda a: a > 0)
+            .flat_map(lambda amount: safe_get(tx, "user").map(lambda user: (user, amount)))
+        )
 
     def process_transactions_fp(transactions: ImmutableList) -> Dict[str, float]:
         """
         Process transactions using functional composition.
         Much cleaner than vanilla Python!
         """
-        return (transactions
-                .map(process_transaction_fp)
-                .filter(lambda m: m.is_just())
-                .map(lambda m: m.get())
-                .reduce(lambda acc, item: {
-                    **acc,
-                    item[0]: acc.get(item[0], 0) + item[1]
-                }, {}))
-
+        return (
+            transactions.map(process_transaction_fp)
+            .filter(lambda m: m.is_just())
+            .map(lambda m: m.get())
+            .reduce(lambda acc, item: {**acc, item[0]: acc.get(item[0], 0) + item[1]}, {})
+        )
 
     def apply_tax(amount: float) -> float:
         """Apply 20% tax."""
         return amount * 0.8
-
 
     def create_result(user: str, amount: float) -> Dict:
         """Create result dictionary."""
@@ -162,12 +170,10 @@ if HAS_PYGRAHAM:
             "user": user,
             "original": amount,
             "after_tax": after_tax,
-            "savings": amount - after_tax
+            "savings": amount - after_tax,
         }
 
-
-    def complex_pipeline_fp(transactions: ImmutableList,
-                           min_amount: float) -> ImmutableList:
+    def complex_pipeline_fp(transactions: ImmutableList, min_amount: float) -> ImmutableList:
         """
         Complex pipeline using functional composition.
         Notice how readable and composable this is!
@@ -175,14 +181,15 @@ if HAS_PYGRAHAM:
         process_tx = pipe(
             lambda tx: process_transaction_fp(tx),
             lambda maybe: maybe.filter(lambda item: item[1] >= min_amount),
-            lambda maybe: maybe.map(lambda item: create_result(item[0], item[1]))
+            lambda maybe: maybe.map(lambda item: create_result(item[0], item[1])),
         )
 
-        return (transactions
-                .map(process_tx)
-                .filter(lambda m: m.is_just())
-                .map(lambda m: m.get())
-                .sort(key=lambda x: x["after_tax"], reverse=True))
+        return (
+            transactions.map(process_tx)
+            .filter(lambda m: m.is_just())
+            .map(lambda m: m.get())
+            .sort(key=lambda x: x["after_tax"], reverse=True)
+        )
 
 
 # ============================================================================
@@ -190,6 +197,7 @@ if HAS_PYGRAHAM:
 # ============================================================================
 
 if HAS_PYGRAHAM:
+
     def categorize_transaction(tx: Dict) -> str:
         """
         Categorize transaction using pattern matching.
@@ -198,17 +206,21 @@ if HAS_PYGRAHAM:
         amount = tx.get("amount", 0)
         status = tx.get("status", "unknown")
 
-        return match(status,
-            case("completed",
-                 lambda _: match(amount,
-                     case(lambda a: a < 50, lambda _: "small"),
-                     case(lambda a: 50 <= a < 200, lambda _: "medium"),
-                     case(lambda a: a >= 200, lambda _: "large"),
-                     case(_, lambda _: "invalid")
-                 )),
+        return match(
+            status,
+            case(
+                "completed",
+                lambda _: match(
+                    amount,
+                    case(lambda a: a < 50, lambda _: "small"),
+                    case(lambda a: 50 <= a < 200, lambda _: "medium"),
+                    case(lambda a: a >= 200, lambda _: "large"),
+                    case(_, lambda _: "invalid"),
+                ),
+            ),
             case("pending", lambda _: "awaiting"),
             case("failed", lambda _: "error"),
-            case(_, lambda _: "unknown")
+            case(_, lambda _: "unknown"),
         )
 
 
@@ -217,23 +229,23 @@ if HAS_PYGRAHAM:
 # ============================================================================
 
 if HAS_PYGRAHAM:
+
     def divide_safe(a: float, b: float) -> Either:
         """Safe division using Either monad."""
         if b == 0:
             return Left("Division by zero")
         return Right(a / b)
 
-
-    def calculate_average_transaction(user: str,
-                                     transactions: ImmutableList) -> Either:
+    def calculate_average_transaction(user: str, transactions: ImmutableList) -> Either:
         """
         Calculate average transaction amount for a user.
         Uses Either for clean error handling.
         """
-        user_txs = (transactions
-                   .filter(lambda tx: tx.get("user") == user)
-                   .map(lambda tx: tx.get("amount"))
-                   .filter(lambda a: a is not None))
+        user_txs = (
+            transactions.filter(lambda tx: tx.get("user") == user)
+            .map(lambda tx: tx.get("amount"))
+            .filter(lambda a: a is not None)
+        )
 
         if user_txs.is_empty():
             return Left(f"No transactions for user: {user}")
@@ -247,22 +259,25 @@ if HAS_PYGRAHAM:
 # ============================================================================
 
 if HAS_PYGRAHAM:
+
     def process_large_dataset_fp(transactions: LazySequence) -> ImmutableList:
         """
         Process large dataset with lazy evaluation.
         Only computes what's needed!
         """
-        return (transactions
-                .filter(lambda tx: tx.get("status") == "completed")
-                .map(lambda tx: (tx.get("user"), tx.get("amount")))
-                .filter(lambda item: item[1] is not None and item[1] > 100)
-                .take(10)  # Only take first 10, rest never computed!
-                .to_list())
+        return (
+            transactions.filter(lambda tx: tx.get("status") == "completed")
+            .map(lambda tx: (tx.get("user"), tx.get("amount")))
+            .filter(lambda item: item[1] is not None and item[1] > 100)
+            .take(10)  # Only take first 10, rest never computed!
+            .to_list()
+        )
 
 
 # ============================================================================
 # BENCHMARKS
 # ============================================================================
+
 
 def benchmark_processing():
     """Benchmark both implementations."""
@@ -298,7 +313,7 @@ def benchmark_processing():
         print(f"\n  Speedup: {speedup:.2f}x {'faster' if speedup > 1 else 'slower'}")
 
     # Complex pipeline
-    print("\n" + "-"*70)
+    print("\n" + "-" * 70)
     print("COMPLEX PIPELINE:")
 
     min_amount = 50.0
@@ -355,9 +370,7 @@ def demonstrate_features():
     # Lazy evaluation
     print("\nLAZY EVALUATION:")
     print("  Processing 1,000,000 transactions but only taking first 10...")
-    large_dataset = LazySequence.from_iterable(
-        TRANSACTIONS * 125000  # Simulate 1M transactions
-    )
+    large_dataset = LazySequence.from_iterable(TRANSACTIONS * 125000)  # Simulate 1M transactions
     start_time = time.time()
     result = process_large_dataset_fp(large_dataset)
     elapsed = (time.time() - start_time) * 1000

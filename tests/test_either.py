@@ -1,6 +1,7 @@
 """
 Tests for Either monad
 """
+
 import pytest
 from pygraham import Either, Left, Right
 
@@ -60,18 +61,12 @@ class TestEither:
 
     def test_fold_right(self):
         e = Right(5)
-        result = e.fold(
-            lambda l: f"Error: {l}",
-            lambda r: f"Success: {r}"
-        )
+        result = e.fold(lambda l: f"Error: {l}", lambda r: f"Success: {r}")
         assert result == "Success: 5"
 
     def test_fold_left(self):
         e = Left("error")
-        result = e.fold(
-            lambda l: f"Error: {l}",
-            lambda r: f"Success: {r}"
-        )
+        result = e.fold(lambda l: f"Error: {l}", lambda r: f"Success: {r}")
         assert result == "Error: error"
 
     def test_swap_right(self):
@@ -87,10 +82,7 @@ class TestEither:
         assert swapped.get_right() == "error"
 
     def test_chaining(self):
-        result = (Right(5)
-                  .map(lambda x: x * 2)
-                  .map(lambda x: x + 1)
-                  .get_or_else(0))
+        result = Right(5).map(lambda x: x * 2).map(lambda x: x + 1).get_or_else(0)
         assert result == 11
 
     def test_error_handling_chain(self):
@@ -99,13 +91,12 @@ class TestEither:
                 return Left("Division by zero")
             return Right(x / y)
 
-        result = (Right(10)
-                  .flat_map(lambda x: divide(x, 2))
-                  .flat_map(lambda x: divide(x, 0))
-                  .fold(
-                      lambda l: f"Error: {l}",
-                      lambda r: f"Result: {r}"
-                  ))
+        result = (
+            Right(10)
+            .flat_map(lambda x: divide(x, 2))
+            .flat_map(lambda x: divide(x, 0))
+            .fold(lambda l: f"Error: {l}", lambda r: f"Result: {r}")
+        )
         assert result == "Error: Division by zero"
 
     def test_equality(self):
