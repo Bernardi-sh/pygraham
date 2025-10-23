@@ -60,3 +60,9 @@ disallow_untyped_defs = true
 [tool.ruff]
 line-length = 100
 target-version = "py38"
+
+[tool.ruff.lint]
+ignore = ["E731"]  # Allow lambda assignments (common in functional programming)
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F401"]  # Allow unused imports in tests

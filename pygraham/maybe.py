@@ -2,7 +2,7 @@
 Maybe monad implementation for handling optional values elegantly
 """
 
-from typing import TypeVar, Generic, Callable, Optional, Union
+from typing import TypeVar, Generic, Callable, Optional
 
 T = TypeVar("T")
 U = TypeVar("U")
