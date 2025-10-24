@@ -30,8 +30,19 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest tests/ -v --cov=pygraham --cov-report=xml --cov-report=term
+          pytest tests/ -v --cov=pygraham --cov-report=xml:coverage.xml --cov-report=term
         continue-on-error: true
+
+      - name: Verify coverage file
+        run: |
+          if [ -f coverage.xml ]; then
+            echo "Coverage file found"
+            ls -lh coverage.xml
+            head -20 coverage.xml
+          else
+            echo "Coverage file not found!"
+            exit 1
+          fi
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
