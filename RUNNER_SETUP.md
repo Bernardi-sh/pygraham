@@ -16,7 +16,7 @@ This project uses **self-hosted runners** for regular CI/CD operations and **Git
   - Access to local resources
 
 ### GitHub-Hosted Runners (Scheduled)
-- **Triggered by**: Daily at 00:00 UTC (or manual dispatch)
+- **Triggered by**: Monthly on the 1st at 00:00 UTC (or manual dispatch)
 - **Workflow**: `scheduled-ci.yml`
 - **Benefits**:
   - Multi-platform testing (Ubuntu, macOS, Windows)
@@ -199,8 +199,8 @@ Code quality analysis using self-hosted runners:
 - Checks quality gates
 
 ### scheduled-ci.yml (GitHub-Hosted)
-Daily comprehensive testing on GitHub infrastructure:
-- Runs daily at 00:00 UTC
+Monthly comprehensive testing on GitHub infrastructure:
+- Runs monthly on the 1st at 00:00 UTC
 - Can be triggered manually
 - Multi-platform testing (Ubuntu, macOS, Windows)
 - Tests with Python 3.8-3.12
