@@ -29,13 +29,13 @@ class Case:
         """Check if value matches this case's pattern."""
         if isinstance(self.pattern, _WildCard):
             return True
+        if isinstance(self.pattern, type):
+            return isinstance(value, self.pattern)
         if callable(self.pattern):
             try:
                 return bool(self.pattern(value))
             except Exception:
                 return False
-        if isinstance(self.pattern, type):
-            return isinstance(value, self.pattern)
         return self.pattern == value
 
     def execute(self, value: Any) -> Any:

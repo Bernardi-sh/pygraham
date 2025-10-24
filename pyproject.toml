@@ -65,4 +65,4 @@ target-version = "py38"
 ignore = ["E731"]  # Allow lambda assignments (common in functional programming)
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["F401"]  # Allow unused imports in tests
+"tests/*" = ["F401", "E741"]  # Allow unused imports and ambiguous variable names in tests
