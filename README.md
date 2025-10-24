@@ -1,6 +1,7 @@
 # PyGraham 🚀
 
 [![CI/CD Pipeline](https://github.com/Bernardi-sh/pygraham/actions/workflows/ci.yml/badge.svg)](https://github.com/Bernardi-sh/pygraham/actions)
+[![SonarQube Analysis](https://github.com/Bernardi-sh/pygraham/actions/workflows/sonarqube.yml/badge.svg)](https://github.com/Bernardi-sh/pygraham/actions)
 [![PyPI version](https://badge.fury.io/py/pygraham.svg)](https://badge.fury.io/py/pygraham)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pygraham.svg)](https://pypi.org/project/pygraham/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -359,6 +360,17 @@ pip install -e ".[dev]"
 ```bash
 pytest tests/ -v
 ```
+
+### Code Quality
+
+PyGraham uses SonarQube for continuous code quality analysis. The project is analyzed for:
+
+- **Code Quality**: Bugs, vulnerabilities, code smells
+- **Test Coverage**: Line and branch coverage metrics
+- **Security**: Security hotspots and vulnerabilities
+- **Maintainability**: Technical debt and complexity
+
+To set up SonarQube integration, see [SONARQUBE_SETUP.md](SONARQUBE_SETUP.md).
 
 ### Building C++ Extensions
 
