@@ -336,11 +336,13 @@ def handle_response(response):
 
 Check out the [`examples/`](examples/) directory for comprehensive examples:
 
+- **[`banking_transactions.py`](examples/banking_transactions.py)**: Banking transaction processing comparing OOP vs Functional approaches - demonstrates the power of immutability, monads, and pure functions
 - **[`tsp_comparison.py`](examples/tsp_comparison.py)**: Travelling Salesman Problem solved with vanilla Python vs PyGraham
 - **[`data_pipeline.py`](examples/data_pipeline.py)**: Complex data processing pipeline showcasing all features
 
 Run examples:
 ```bash
+python examples/banking_transactions.py
 python examples/tsp_comparison.py
 python examples/data_pipeline.py
 ```
