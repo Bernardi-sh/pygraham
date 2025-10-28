@@ -336,12 +336,14 @@ def handle_response(response):
 
 Check out the [`examples/`](examples/) directory for comprehensive examples:
 
+- **[`file_system_tree.py`](examples/file_system_tree.py)**: File system tree traversal comparing OOP visitor pattern vs Functional recursion - showcases the elegance of recursive solutions, catamorphisms (fold), and pattern matching for hierarchical data
 - **[`banking_transactions.py`](examples/banking_transactions.py)**: Banking transaction processing comparing OOP vs Functional approaches - demonstrates the power of immutability, monads, and pure functions
 - **[`tsp_comparison.py`](examples/tsp_comparison.py)**: Travelling Salesman Problem solved with vanilla Python vs PyGraham
 - **[`data_pipeline.py`](examples/data_pipeline.py)**: Complex data processing pipeline showcasing all features
 
 Run examples:
 ```bash
+python examples/file_system_tree.py
 python examples/banking_transactions.py
 python examples/tsp_comparison.py
 python examples/data_pipeline.py
