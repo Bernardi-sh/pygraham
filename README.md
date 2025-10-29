@@ -336,6 +336,20 @@ def handle_response(response):
 
 Check out the [`examples/`](examples/) directory for comprehensive examples:
 
+### Basic Tutorials (Start Here!)
+
+Learn each concept from the ground up with simple, clear examples:
+
+- **[`01_maybe_basics.py`](examples/01_maybe_basics.py)**: Maybe monad fundamentals - handling optional values without None checks
+- **[`02_either_basics.py`](examples/02_either_basics.py)**: Either monad fundamentals - explicit error handling without exceptions
+- **[`03_immutable_list_basics.py`](examples/03_immutable_list_basics.py)**: ImmutableList fundamentals - working with lists that never change
+- **[`04_compose_pipe_curry_basics.py`](examples/04_compose_pipe_curry_basics.py)**: Function composition fundamentals - building complex operations from simple functions
+- **[`05_pattern_matching_basics.py`](examples/05_pattern_matching_basics.py)**: Pattern matching fundamentals - elegant alternatives to if-elif chains
+
+### Advanced Examples
+
+Real-world comparisons showing functional programming advantages:
+
 - **[`file_system_tree.py`](examples/file_system_tree.py)**: File system tree traversal comparing OOP visitor pattern vs Functional recursion - showcases the elegance of recursive solutions, catamorphisms (fold), and pattern matching for hierarchical data
 - **[`banking_transactions.py`](examples/banking_transactions.py)**: Banking transaction processing comparing OOP vs Functional approaches - demonstrates the power of immutability, monads, and pure functions
 - **[`tsp_comparison.py`](examples/tsp_comparison.py)**: Travelling Salesman Problem solved with vanilla Python vs PyGraham
@@ -343,6 +357,14 @@ Check out the [`examples/`](examples/) directory for comprehensive examples:
 
 Run examples:
 ```bash
+# Basic tutorials
+python examples/01_maybe_basics.py
+python examples/02_either_basics.py
+python examples/03_immutable_list_basics.py
+python examples/04_compose_pipe_curry_basics.py
+python examples/05_pattern_matching_basics.py
+
+# Advanced examples
 python examples/file_system_tree.py
 python examples/banking_transactions.py
 python examples/tsp_comparison.py
