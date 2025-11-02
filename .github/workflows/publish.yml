@@ -56,7 +56,7 @@ jobs:
     - name: Build manylinux wheels
       env:
         CIBW_SKIP_REPAIR: "1"
-      run: cibuildwheel --output-dir dist --platform manylinux_2_24_x86_64
+      run: cibuildwheel --output-dir dist --platform linux
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
