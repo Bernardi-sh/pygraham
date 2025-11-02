@@ -1,12 +1,12 @@
 from setuptools import setup
-from setuptools_rust import Binding, RustExtension
+# from setuptools_rust import Binding, RustExtension
 
 setup(
     rust_extensions=[
         RustExtension(
-            "pygraham._rust",
+            #"pygraham._rust",
             binding=Binding.PyO3,
-            optional=True,
+            # optional=True,
         )
     ],
 )
