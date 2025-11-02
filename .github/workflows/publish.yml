@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Publish.yml
 
 on:
   workflow_dispatch:  # Allow manual trigger
