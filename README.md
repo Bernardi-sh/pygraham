@@ -2,9 +2,12 @@
 
 [![CI/CD Pipeline](https://github.com/Bernardi-sh/pygraham/actions/workflows/ci.yml/badge.svg)](https://github.com/Bernardi-sh/pygraham/actions)
 [![SonarQube Analysis](https://github.com/Bernardi-sh/pygraham/actions/workflows/sonarqube.yml/badge.svg)](https://github.com/Bernardi-sh/pygraham/actions)
+[![codecov](https://codecov.io/gh/Bernardi-sh/pygraham/branch/main/graph/badge.svg)](https://codecov.io/gh/Bernardi-sh/pygraham)
 [![PyPI version](https://badge.fury.io/py/pygraham.svg)](https://badge.fury.io/py/pygraham)
 [![Python Versions](https://img.shields.io/pypi/pyversions/pygraham.svg)](https://pypi.org/project/pygraham/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/Bernardi-sh/pygraham/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/Bernardi-sh/pygraham.svg)](https://github.com/Bernardi-sh/pygraham/issues)
 
 A high-performance functional programming library for Python that brings **truly functional programming capabilities** with **significant performance improvements** over vanilla Python and other functional libraries.
 
